@@ -333,8 +333,6 @@
 		defib.fire_act(exposed_temperature, exposed_volume)
 
 /obj/item/shockpaddles/proc/check_range()
-	SIGNAL_HANDLER
-
 	if(!req_defib || !defib)
 		return
 	if(!in_range(src,defib))
@@ -537,7 +535,7 @@
 			H.emote("scream")
 			shock_touching(45, H)
 			if(H.can_heartattack() && !H.undergoing_cardiac_arrest())
-				if(!H.stat)
+				if(H.is_conscious())
 					H.visible_message("<span class='warning'>[H] thrashes wildly, clutching at [H.p_their()] chest!</span>",
 						"<span class='userdanger'>You feel a horrible agony in your chest!</span>")
 				H.set_heartattack(TRUE)

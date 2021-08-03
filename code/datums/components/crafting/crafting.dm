@@ -312,10 +312,8 @@
 		qdel(DL)
 
 /datum/component/personal_crafting/proc/component_ui_interact(atom/movable/screen/craft/image, location, control, params, user)
-	SIGNAL_HANDLER
-
 	if(user == parent)
-		INVOKE_ASYNC(src, .proc/ui_interact, user)
+		ui_interact(user)
 
 /datum/component/personal_crafting/ui_state(mob/user)
 	return GLOB.not_incapacitated_turf_state

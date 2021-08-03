@@ -37,14 +37,11 @@
 		to_chat(src, "<span class='warning'>Filename must end in '.dmm': [map]</span>")
 		return
 	var/datum/map_template/M
-	var/type
 	switch(alert(src, "What kind of map is this?", "Map type", "Normal", "Shuttle", "Cancel"))
 		if("Normal")
-			type = "Normal"
-			M = new /datum/map_template(map, "[map] - Uploaded by [ckey] at [time2text(world.timeofday,"YYYY-MM-DD hh:mm:ss")]", TRUE)
+			M = new /datum/map_template(map, "[map]", TRUE)
 		if("Shuttle")
-			type = "Shuttle"
-			M = new /datum/map_template/shuttle(map, "[map] - Uploaded by [ckey] at [time2text(world.timeofday,"YYYY-MM-DD hh:mm:ss")]", TRUE, copytext("[map]",1, -4))
+			M = new /datum/map_template/shuttle(map, "[map]", TRUE)
 		else
 			return
 	if(!M.cached_map)
@@ -64,11 +61,7 @@
 		else
 			alert(src, "The map failed validation and cannot be loaded.", "Map Errors", "Oh Darn")
 			return
-	switch(type)
-		if("Normal")
-			SSmapping.map_templates[M.name] = M
-		if("Shuttle")
-			var/datum/map_template/shuttle/S = M
-			SSmapping.shuttle_templates[S.shuttle_id] = S
-	message_admins("<span class='adminnotice'>[key_name_admin(src)] has uploaded a [type] map template '[map]' ([M.width]x[M.height])[report_link].</span>")
+
+	SSmapping.map_templates[M.name] = M
+	message_admins("<span class='adminnotice'>[key_name_admin(src)] has uploaded a map template '[map]' ([M.width]x[M.height])[report_link].</span>")
 	to_chat(src, "<span class='notice'>Map template '[map]' ready to place ([M.width]x[M.height])</span>")

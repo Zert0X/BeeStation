@@ -88,21 +88,7 @@
 				qdel(i)
 		antag_datums = null
 	QDEL_NULL(language_holder)
-	set_current(null)
 	return ..()
-
-/datum/mind/proc/set_current(mob/new_current)
-	if(new_current && QDELING(new_current))
-		CRASH("Tried to set a mind's current var to a qdeleted mob, what the fuck")
-	if(current)
-		UnregisterSignal(src, COMSIG_PARENT_QDELETING)
-	current = new_current
-	if(current)
-		RegisterSignal(src, COMSIG_PARENT_QDELETING, .proc/clear_current)
-
-/datum/mind/proc/clear_current(datum/source)
-	SIGNAL_HANDLER
-	set_current(null)
 
 /datum/mind/proc/get_language_holder()
 	if(!language_holder)
@@ -122,13 +108,13 @@
 		key = new_character.key
 
 	if(new_character.mind)								//disassociate any mind currently in our new body's mind variable
-		new_character.mind.set_current(null)
+		new_character.mind.current = null
 
 	var/datum/atom_hud/antag/hud_to_transfer = antag_hud//we need this because leave_hud() will clear this list
 	var/mob/living/old_current = current
 	if(current)
 		current.transfer_observers_to(new_character)	//transfer anyone observing the old character to the new one
-	set_current(new_character)								//associate ourself with our new body
+	current = new_character								//associate ourself with our new body
 	new_character.mind = src							//and associate our new body with ourself
 	for(var/a in antag_datums)	//Makes sure all antag datums effects are applied in the new body
 		var/datum/antagonist/A = a
@@ -146,8 +132,6 @@
 	SEND_SIGNAL(src, COMSIG_MIND_TRANSFER_TO, old_current, new_character)
 
 /datum/mind/proc/set_death_time()
-	SIGNAL_HANDLER
-
 	last_death = world.time
 
 /datum/mind/proc/store_memory(new_text)
@@ -742,7 +726,7 @@
 		SSticker.minds += mind
 	if(!mind.name)
 		mind.name = real_name
-	mind.set_current(src)
+	mind.current = src
 
 /mob/living/carbon/mind_initialize()
 	..()

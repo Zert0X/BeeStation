@@ -50,7 +50,7 @@
 			Retaliate()
 
 		if(enemies.len && prob(10))
-			clear_enemies()
+			enemies = list()
 			LoseTarget()
 			src.visible_message("<span class='notice'>[src] calms down.</span>")
 	if(stat == CONSCIOUS)

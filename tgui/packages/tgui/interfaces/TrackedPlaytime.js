@@ -12,10 +12,12 @@ const PlaytimeSection = props => {
   const { playtimes } = props;
   const sortedPlaytimes = sortByPlaytime(Object.entries(playtimes));
   const mostPlayed = sortedPlaytimes[0][1];
+
   return (
     <Table>
       {sortedPlaytimes.map(([jobName, playtime]) => {
         const ratio = playtime / mostPlayed;
+
         return (
           <Table.Row key={jobName}>
             <Table.Cell collapsing p={0.5} style={{
@@ -23,12 +25,14 @@ const PlaytimeSection = props => {
             }}>
               <Box align="right">{jobName}</Box>
             </Table.Cell>
+
             <Table.Cell>
               <ProgressBar
                 maxValue={mostPlayed}
                 value={playtime}>
                 <Flex>
                   <Flex.Item width={`${ratio * 100}%`} />
+
                   <Flex.Item>
                     {(playtime / 60).toLocaleString(undefined, {
                       "minimumFractionDigits": 1,
@@ -51,14 +55,17 @@ export const TrackedPlaytime = (props, context) => {
     failReason,
     jobPlaytimes,
     specialPlaytimes,
+
     livingTime,
     ghostTime,
   } = data;
+
   return (
     <Window
       title="Tracked Playtime"
       width={550}
-      height={650}>
+      height={650}
+      resizable>
       <Window.Content scrollable>
         {failReason && (
           failReason === JOB_REPORT_MENU_FAIL_REASON_TRACKING_DISABLED
@@ -75,11 +82,17 @@ export const TrackedPlaytime = (props, context) => {
                 }}
               />
             </Section>
+
             <Section title="Jobs">
-              <PlaytimeSection playtimes={jobPlaytimes} />
+              <PlaytimeSection
+                playtimes={jobPlaytimes}
+              />
             </Section>
+
             <Section title="Special">
-              <PlaytimeSection playtimes={specialPlaytimes} />
+              <PlaytimeSection
+                playtimes={specialPlaytimes}
+              />
             </Section>
           </Box>
         )}

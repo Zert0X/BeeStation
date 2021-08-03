@@ -9,6 +9,7 @@ export const AtmosControlConsole = (props, context) => {
   const sensors = data.sensors || [];
   return (
     <Window
+      resizable
       width={400}
       height={925}>
       <Window.Content scrollable>

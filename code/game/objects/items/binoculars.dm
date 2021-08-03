@@ -25,8 +25,6 @@
 	return ..()
 
 /obj/item/binoculars/proc/on_wield(obj/item/source, mob/user)
-	SIGNAL_HANDLER
-
 	RegisterSignal(user, COMSIG_MOVABLE_MOVED, .proc/unwield)
 	listeningTo = user
 	user.visible_message("<span class='notice'>[user] holds [src] up to [user.p_their()] eyes.</span>", "<span class='notice'>You hold [src] up to your eyes.</span>")
@@ -51,8 +49,6 @@
 	C.pixel_y = world.icon_size*_y
 
 /obj/item/binoculars/proc/on_unwield(obj/item/source, mob/user)
-	SIGNAL_HANDLER
-
 	unwield(user)
 
 /obj/item/binoculars/proc/unwield(mob/user)

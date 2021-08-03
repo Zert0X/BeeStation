@@ -50,8 +50,6 @@
 	return TRUE
 
 /datum/component/forensics/proc/clean_act(datum/source, strength)
-	SIGNAL_HANDLER
-
 	if(strength >= CLEAN_STRENGTH_FINGERPRINTS)
 		wipe_fingerprints()
 	if(strength >= CLEAN_STRENGTH_BLOOD)

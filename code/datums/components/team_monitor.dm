@@ -152,8 +152,6 @@ GLOBAL_LIST_EMPTY(tracker_beacons)
 //When the parent is removed, we need to update our arrows
 //Also if we are visible update the arrows of anything tracking us
 /datum/component/team_monitor/proc/parent_moved()
-	SIGNAL_HANDLER
-
 	//Update our alt appearences
 	update_all_directions()
 
@@ -203,8 +201,6 @@ GLOBAL_LIST_EMPTY(tracker_beacons)
 //The parent equipped an item with a team_monitor, check if its in the right slot and apply the hud
 //Also needs to enable other trackers pointers towards us
 /datum/component/team_monitor/proc/parent_equipped(datum/source, mob/equipper, slot)
-	SIGNAL_HANDLER
-
 	var/obj/item/clothing/item = parent
 	if(!istype(item))
 		return
@@ -216,8 +212,6 @@ GLOBAL_LIST_EMPTY(tracker_beacons)
 //Disable our hud
 //Disable the pointers to us
 /datum/component/team_monitor/proc/parent_dequpped(datum/source, mob/user)
-	SIGNAL_HANDLER
-
 	hide_hud(user)
 
 //===========
@@ -426,8 +420,6 @@ GLOBAL_LIST_EMPTY(tracker_beacons)
 //The parent equipped an item with a team_monitor, check if its in the right slot and apply the hud
 //Also needs to enable other trackers pointers towards us
 /datum/component/tracking_beacon/proc/parent_equipped(datum/source, mob/equipper, slot)
-	SIGNAL_HANDLER
-
 	var/obj/item/clothing/item = parent
 	if(!istype(item))
 		return
@@ -444,8 +436,6 @@ GLOBAL_LIST_EMPTY(tracker_beacons)
 //Disable our hud
 //Disable the pointers to us
 /datum/component/tracking_beacon/proc/parent_dequpped(datum/source, mob/user)
-	SIGNAL_HANDLER
-
 	toggle_visibility(FALSE)
 	if(updating)
 		UnregisterSignal(updating, COMSIG_MOVABLE_MOVED)
@@ -470,8 +460,6 @@ GLOBAL_LIST_EMPTY(tracker_beacons)
 //===========
 
 /datum/component/tracking_beacon/proc/update_position()
-	SIGNAL_HANDLER
-
 	//Update everyone tracking us
 	if(!visible)
 		return

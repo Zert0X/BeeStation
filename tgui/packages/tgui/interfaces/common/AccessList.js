@@ -1,4 +1,5 @@
 import { sortBy } from 'common/collections';
+import { Fragment } from 'inferno';
 import { useLocalState } from '../../backend';
 import { Button, Flex, Grid, Section, Tabs } from '../../components';
 
@@ -63,7 +64,7 @@ export const AccessList = (props, context) => {
     <Section
       title="Access"
       buttons={(
-        <>
+        <Fragment>
           <Button
             icon="check-double"
             content="Grant All"
@@ -74,7 +75,7 @@ export const AccessList = (props, context) => {
             content="Deny All"
             color="bad"
             onClick={() => denyAll()} />
-        </>
+        </Fragment>
       )}>
       <Flex>
         <Flex.Item>

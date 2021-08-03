@@ -135,8 +135,6 @@
 	..()
 
 /obj/machinery/computer/camera_advanced/xenobio/proc/on_contents_del(datum/source, atom/deleted)
-	SIGNAL_HANDLER
-
 	if(current_potion == deleted)
 		current_potion = null
 	if(deleted in stored_slimes)
@@ -240,7 +238,7 @@
 		if(X.monkeys >= 1)
 			var/mob/living/carbon/monkey/food = new /mob/living/carbon/monkey(remote_eye.loc, TRUE, owner)
 			if (!QDELETED(food))
-				food.LAssailant = WEAKREF(C)
+				food.LAssailant = C
 				X.monkeys--
 				X.monkeys = round(X.monkeys, 0.1)		//Prevents rounding errors
 				to_chat(owner, "[X] now has [X.monkeys] monkeys stored.")
@@ -368,8 +366,6 @@
 
 // Scans slime
 /obj/machinery/computer/camera_advanced/xenobio/proc/XenoSlimeClickCtrl(mob/living/user, mob/living/simple_animal/slime/S)
-	SIGNAL_HANDLER
-
 	if(!GLOB.cameranet.checkTurfVis(S.loc))
 		to_chat(user, "<span class='warning'>Target is not near a camera. Cannot proceed.</span>")
 		return
@@ -381,8 +377,6 @@
 
 //Feeds a potion to slime
 /obj/machinery/computer/camera_advanced/xenobio/proc/XenoSlimeClickAlt(mob/living/user, mob/living/simple_animal/slime/S)
-	SIGNAL_HANDLER
-
 	if(!GLOB.cameranet.checkTurfVis(S.loc))
 		to_chat(user, "<span class='warning'>Target is not near a camera. Cannot proceed.</span>")
 		return
@@ -398,8 +392,6 @@
 
 //Picks up slime
 /obj/machinery/computer/camera_advanced/xenobio/proc/XenoSlimeClickShift(mob/living/user, mob/living/simple_animal/slime/S)
-	SIGNAL_HANDLER
-
 	if(!GLOB.cameranet.checkTurfVis(S.loc))
 		to_chat(user, "<span class='warning'>Target is not near a camera. Cannot proceed.</span>")
 		return
@@ -422,8 +414,6 @@
 
 //Place slimes
 /obj/machinery/computer/camera_advanced/xenobio/proc/XenoTurfClickShift(mob/living/user, turf/open/T)
-	SIGNAL_HANDLER
-
 	if(!GLOB.cameranet.checkTurfVis(T))
 		to_chat(user, "<span class='warning'>Target is not near a camera. Cannot proceed.</span>")
 		return
@@ -439,8 +429,6 @@
 
 //Place monkey
 /obj/machinery/computer/camera_advanced/xenobio/proc/XenoTurfClickCtrl(mob/living/user, turf/open/T)
-	SIGNAL_HANDLER
-
 	if(!GLOB.cameranet.checkTurfVis(T))
 		to_chat(user, "<span class='warning'>Target is not near a camera. Cannot proceed.</span>")
 		return
@@ -452,7 +440,7 @@
 		if(X.monkeys >= 1)
 			var/mob/living/carbon/monkey/food = new /mob/living/carbon/monkey(T, TRUE, C)
 			if (!QDELETED(food))
-				food.LAssailant = WEAKREF(C)
+				food.LAssailant = C
 				X.monkeys--
 				X.monkeys = round(X.monkeys, 0.1)		//Prevents rounding errors
 				to_chat(C, "[X] now has [X.monkeys] monkeys stored.")
@@ -461,8 +449,6 @@
 
 //Pick up monkey
 /obj/machinery/computer/camera_advanced/xenobio/proc/XenoMonkeyClickCtrl(mob/living/user, mob/living/carbon/monkey/M)
-	SIGNAL_HANDLER
-
 	if(!GLOB.cameranet.checkTurfVis(M.loc))
 		to_chat(user, "<span class='warning'>Target is not near a camera. Cannot proceed.</span>")
 		return
@@ -474,7 +460,7 @@
 		to_chat(C, "<span class='notice'>There is no connected monkey recycler.  Use a multitool to link one.</span>")
 		return
 	if(mobarea.name == E.allowed_area || mobarea.xenobiology_compatible)
-		if(!M.stat)
+		if(M.is_conscious())
 			return
 		M.visible_message("[M] vanishes as [p_theyre()] reclaimed for recycling!")
 		X.connected_recycler.use_power(500)

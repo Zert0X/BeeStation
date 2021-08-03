@@ -30,6 +30,7 @@ export const ClockworkSlab = (props, context) => {
   return (
     <Window
       theme="clockwork"
+      resizable
       width={860}
       height={700}>
       <Window.Content>

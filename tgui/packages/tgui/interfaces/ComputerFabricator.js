@@ -1,4 +1,5 @@
 import { multiline } from 'common/string';
+import { Fragment } from 'inferno';
 import { useBackend } from '../backend';
 import { Box, Button, Grid, Section, Table, Tooltip } from '../components';
 import { Window } from '../layouts';
@@ -267,7 +268,7 @@ const CfStep2 = (props, context) => {
           </Table.Cell>
         </Table.Row>
         {data.devtype !== 2 && (
-          <>
+          <Fragment>
             <Table.Row>
               <Table.Cell bold position="relative">
                 Processor Unit:
@@ -326,7 +327,7 @@ const CfStep2 = (props, context) => {
                   })} />
               </Table.Cell>
             </Table.Row>
-          </>
+          </Fragment>
         )}
       </Table>
       <Button

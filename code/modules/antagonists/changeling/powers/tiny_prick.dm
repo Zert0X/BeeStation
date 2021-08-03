@@ -108,7 +108,7 @@
 		C.real_name = NewDNA.real_name
 		NewDNA.transfer_identity(C)
 		if(ismonkey(C))
-			C.humanize(TR_KEEPITEMS | TR_KEEPIMPLANTS | TR_KEEPORGANS | TR_KEEPDAMAGE | TR_KEEPVIRUS | TR_DEFAULTMSG | TR_KEEPAI)
+			C.humanize(TR_KEEPITEMS | TR_KEEPIMPLANTS | TR_KEEPORGANS | TR_KEEPDAMAGE | TR_KEEPVIRUS | TR_DEFAULTMSG)
 		C.updateappearance(mutcolor_update=1)
 
 

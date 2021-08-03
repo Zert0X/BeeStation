@@ -45,12 +45,12 @@
 	return special_voice
 
 /mob/living/carbon/human/binarycheck()
-	if(stat >= SOFT_CRIT || !ears)
-		return FALSE
-	var/obj/item/radio/headset/dongle = ears
-	if(!istype(dongle))
-		return FALSE
-	return dongle.translate_binary
+	if(ears)
+		var/obj/item/radio/headset/dongle = ears
+		if(!istype(dongle))
+			return FALSE
+		if(dongle.translate_binary)
+			return TRUE
 
 /mob/living/carbon/human/radio(message, list/message_mods = list(), list/spans, language)
 	. = ..()

@@ -22,5 +22,6 @@ tgstation.int
 tgstation.rsc
 tgstation.lk
 tgstation.dyn.rsc
-*.dll
+rust_g.dll
+BSQL.dll
 Dockerfile

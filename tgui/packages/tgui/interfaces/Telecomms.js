@@ -27,6 +27,7 @@ export const Telecomms = (props, context) => {
   const frequencies = data.frequencies || [];
   return (
     <Window
+      resizable
       title={id}
       width={400}
       height={600}>

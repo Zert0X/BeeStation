@@ -5,8 +5,6 @@ GLOBAL_VAR(restart_counter)
 //This happens after the Master subsystem new(s) (it's a global datum)
 //So subsystems globals exist, but are not initialised
 /world/New()
-	//Keep the auxtools stuff at the top
-	AUXTOOLS_CHECK(AUXMOS)
 	//Early profile for auto-profiler - will be stopped on profiler init if necessary.
 	world.Profile(PROFILE_START)
 
@@ -259,15 +257,17 @@ GLOBAL_VAR(restart_counter)
 
 	log_world("World rebooted at [time_stamp()]")
 	shutdown_logging() // Past this point, no logging procs can be used, at risk of data loss.
-	AUXTOOLS_SHUTDOWN(AUXMOS)
 	..()
 
 /world/Del()
-	shutdown_logging() // makes sure the thread is closed before end, else we terminate
-	AUXTOOLS_SHUTDOWN(AUXMOS)
-	var/debug_server = world.GetConfig("env", "AUXTOOLS_DEBUG_DLL")
-	if (debug_server)
-		call(debug_server, "auxtools_shutdown")()
+	// memory leaks bad
+	var/num_deleted = 0
+	for(var/datum/gas_mixture/GM)
+		GM.__gasmixture_unregister()
+		num_deleted++
+	log_world("Deallocated [num_deleted] gas mixtures")
+	if(fexists(EXTOOLS))
+		call(EXTOOLS, "cleanup")()
 	..()
 
 /world/proc/update_status()

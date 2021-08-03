@@ -64,7 +64,7 @@
 	strip_delay = 80
 
 /obj/item/clothing/suit/armor/hos/trenchcoat
-	name = "armored trenchcoat"
+	name = "armored trenchoat"
 	desc = "A trenchcoat enhanced with a special lightweight kevlar. The epitome of tactical plainclothes."
 	icon_state = "hostrench"
 	item_state = "hostrench"

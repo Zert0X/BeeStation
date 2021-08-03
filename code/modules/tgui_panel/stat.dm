@@ -23,6 +23,8 @@
  * Sets the different available tabs.
  */
 /datum/tgui_panel/proc/set_tab_info(payload)
+	if(!is_ready())
+		return
 	window.send_message("stat/setStatTabs", payload)
 
 /**
@@ -31,6 +33,8 @@
  * Sends TGUI the data of every single verb accessable to the user.
  */
 /datum/tgui_panel/proc/set_verb_infomation(payload)
+	if(!is_ready())
+		return
 	window.send_message("stat/setVerbInfomation", payload)
 
 /**
@@ -39,6 +43,8 @@
  * Sets the infomation to be displayed of the current tab. (For non verb tabs)
  */
 /datum/tgui_panel/proc/set_panel_infomation(payload)
+	if(!is_ready())
+		return
 	window.send_message("stat/setPanelInfomation", payload)
 
 /**
@@ -47,6 +53,8 @@
  * Sets the current tab.
  */
 /datum/tgui_panel/proc/set_stat_tab(new_tab)
+	if(!is_ready())
+		return
 	window.send_message("stat/setTab", new_tab)
 
 /**

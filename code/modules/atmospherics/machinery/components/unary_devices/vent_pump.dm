@@ -17,8 +17,6 @@
 	level = 1
 	layer = GAS_SCRUBBER_LAYER
 
-	interacts_with_air = TRUE
-
 	var/id_tag = null
 	var/pump_direction = RELEASING
 
@@ -119,7 +117,9 @@
 			if(air_contents.return_temperature() > 0)
 				var/transfer_moles = pressure_delta*environment.return_volume()/(air_contents.return_temperature() * R_IDEAL_GAS_EQUATION)
 
-				loc.assume_air_moles(air_contents, transfer_moles)
+				var/datum/gas_mixture/removed = air_contents.remove(transfer_moles)
+
+				loc.assume_air(removed)
 				air_update_turf()
 
 	else // external -> internal
@@ -132,7 +132,11 @@
 				moles_delta = min(moles_delta, (internal_pressure_bound - air_contents.return_pressure()) * our_multiplier)
 
 			if(moles_delta > 0)
-				loc.transfer_air(air_contents, moles_delta)
+				var/datum/gas_mixture/removed = loc.remove_air(moles_delta)
+				if (isnull(removed)) // in space
+					return
+
+				air_contents.merge(removed)
 				air_update_turf()
 	update_parents()
 

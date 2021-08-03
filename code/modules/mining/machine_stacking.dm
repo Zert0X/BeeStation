@@ -14,13 +14,7 @@
 	. = ..()
 	machine = locate(/obj/machinery/mineral/stacking_machine, get_step(src, machinedir))
 	if (machine)
-		machine.console = src
-
-/obj/machinery/mineral/stacking_unit_console/Destroy()
-	if(machine)
-		machine.console = null
-		machine = null
-	return ..()
+		machine.CONSOLE = src
 
 /obj/machinery/mineral/stacking_unit_console/ui_interact(mob/user)
 	. = ..()
@@ -80,7 +74,7 @@
 	circuit = /obj/item/circuitboard/machine/stacking_machine
 	input_dir = EAST
 	output_dir = WEST
-	var/obj/machinery/mineral/stacking_unit_console/console
+	var/obj/machinery/mineral/stacking_unit_console/CONSOLE
 	var/stk_types = list()
 	var/stk_amt   = list()
 	var/stack_list[0] //Key: Type.  Value: Instance of type.
@@ -94,9 +88,7 @@
 	materials = AddComponent(/datum/component/remote_materials, "stacking", mapload, FALSE, mapload && force_connect)
 
 /obj/machinery/mineral/stacking_machine/Destroy()
-	if(console)
-		console.machine = null
-		console = null
+	CONSOLE = null
 	materials = null
 	return ..()
 
@@ -116,8 +108,8 @@
 /obj/machinery/mineral/stacking_machine/multitool_act(mob/living/user, obj/item/multitool/M)
 	if(istype(M))
 		if(istype(M.buffer, /obj/machinery/mineral/stacking_unit_console))
-			console = M.buffer
-			console.machine = src
+			CONSOLE = M.buffer
+			CONSOLE.machine = src
 			to_chat(user, "<span class='notice'>You link [src] to the console in [M]'s buffer.</span>")
 			return TRUE
 

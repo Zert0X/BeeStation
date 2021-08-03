@@ -79,7 +79,8 @@ class PaintCanvas extends Component {
 export const Canvas = (props, context) => {
   const { act, data } = useBackend(context);
   return (
-    <Window>
+    <Window
+      resizable>
       <Window.Content scrollable>
         <Box textAlign="center">
           <PaintCanvas

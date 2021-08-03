@@ -154,7 +154,6 @@
 ///destroys reference to stored_gun to prevent hard deletions
 /obj/machinery/porta_turret/proc/null_gun()
 	SIGNAL_HANDLER
-
 	stored_gun = null
 
 /obj/machinery/porta_turret/Destroy()

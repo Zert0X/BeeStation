@@ -15,7 +15,6 @@
 
 .ModularFabricator__sidebar {
   position: absolute;
-  top: 5px;
   right: 5px;
   width: 320px;
   height: 100%;
@@ -30,7 +29,7 @@
 }
 
 .ModularFabricator__sidebar_bottom {
-  position: fixed;
-  bottom: 20px;
-  width: 310px;
+  position: absolute;
+  bottom: 5px;
+  width: calc(100% - 10px);
 }

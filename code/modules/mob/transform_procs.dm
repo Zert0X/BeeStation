@@ -1,6 +1,6 @@
 #define TRANSFORMATION_DURATION 22
 
-/mob/living/carbon/proc/monkeyize(tr_flags = (TR_KEEPITEMS | TR_KEEPVIRUS | TR_DEFAULTMSG | TR_KEEPAI))
+/mob/living/carbon/proc/monkeyize(tr_flags = (TR_KEEPITEMS | TR_KEEPVIRUS | TR_DEFAULTMSG))
 	if (notransform || transformation_timer)
 		return
 
@@ -136,13 +136,6 @@
 			changeling.purchasedpowers += hf
 			changeling.regain_powers()
 
-
-	//if we have an AI, transfer it; if we don't, make sure the new thing doesn't either
-	if(tr_flags & TR_KEEPAI)
-		if(ai_controller)
-			ai_controller.PossessPawn(O)
-		else if(O.ai_controller)
-			QDEL_NULL(O.ai_controller)
 
 	if (tr_flags & TR_DEFAULTMSG)
 		to_chat(O, "<B>You are now a monkey.</B>")
@@ -315,7 +308,7 @@
 //////////////////////////           Humanize               //////////////////////////////
 //Could probably be merged with monkeyize but other transformations got their own procs, too
 
-/mob/living/carbon/proc/humanize(tr_flags = (TR_KEEPITEMS | TR_KEEPVIRUS | TR_DEFAULTMSG | TR_KEEPAI))
+/mob/living/carbon/proc/humanize(tr_flags = (TR_KEEPITEMS | TR_KEEPVIRUS | TR_DEFAULTMSG))
 	if (notransform || transformation_timer)
 		return
 
@@ -461,14 +454,6 @@
 			for(var/datum/action/changeling/humanform/HF in changeling.purchasedpowers)
 				changeling.purchasedpowers -= HF
 				changeling.regain_powers()
-
-	//if we have an AI, transfer it; if we don't, make sure the new thing doesn't either
-	if(tr_flags & TR_KEEPAI)
-		if(ai_controller)
-			ai_controller.PossessPawn(O)
-		else if(O.ai_controller)
-			QDEL_NULL(O.ai_controller)
-
 
 	O.a_intent = INTENT_HELP
 	if (tr_flags & TR_DEFAULTMSG)
