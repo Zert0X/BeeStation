@@ -1,9 +1,9 @@
 //Global lists so they can be editted by admins
+/obj/item/storage/box/medsprays
 GLOBAL_LIST_INIT(battle_royale_basic_loot, list(
 		/obj/item/soap,
 		/obj/item/kitchen/knife,
 		/obj/item/kitchen/knife/combat,
-		/obj/item/kitchen/knife/poison,
 		/obj/item/throwing_star,
 		/obj/item/syndie_glue,
 		/obj/item/book_of_babel,
@@ -13,7 +13,7 @@ GLOBAL_LIST_INIT(battle_royale_basic_loot, list(
 		/obj/item/storage/box/gorillacubes,
 		/obj/item/storage/box/teargas,
 		/obj/item/storage/box/security/radio,
-		/obj/item/storage/box/medsprays,
+		/obj/item/storage/box/med_synthflesh,
 		/obj/item/storage/toolbox/syndicate,
 		/obj/item/storage/box/syndie_kit/bee_grenades,
 		/obj/item/storage/box/syndie_kit/centcom_costume,
@@ -72,7 +72,6 @@ GLOBAL_LIST_INIT(battle_royale_basic_loot, list(
 		/obj/item/gun/energy/ionrifle,
 		/obj/item/organ/regenerative_core/battle_royale
 	))
-
 GLOBAL_LIST_INIT(battle_royale_good_loot, list(
 		/obj/item/hand_tele,
 		/obj/item/gun/ballistic/bow/clockbolt,
@@ -133,6 +132,8 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 			admin.tgui_panel.clear_br_popup()
 
 	GLOB.battle_royale = new()
+	if(alert(src, "ARE YOU SURE YOU THAT PEOPLE WILL SPAWN RANDOMLY?",,"Yes","No") != "Yes")
+		GLOB.battle_royale.random_spawn = FALSE
 	GLOB.battle_royale.start()
 
 /client/proc/battle_royale_speed()
@@ -195,6 +196,7 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 	var/list/death_wall
 	var/field_delay = 15
 	var/debug_mode = FALSE
+	var/random_spawn = TRUE
 
 /datum/battle_royale_controller/Destroy(force, ...)
 	QDEL_LIST(death_wall)
@@ -316,29 +318,86 @@ GLOBAL_DATUM(battle_royale, /datum/battle_royale_controller)
 
 /datum/battle_royale_controller/proc/titanfall()
 	var/list/participants = pollGhostCandidates("Would you like to partake in BATTLE ROYALE?")
-	var/turf/spawn_turf = get_safe_random_station_turf()
-	var/obj/structure/closet/supplypod/centcompod/pod = new()
-	pod.setStyle()
 	players = list()
-	for(var/mob/M in participants)
-		var/key = M.key
-		//Create a mob and transfer their mind to it.
-		CHECK_TICK
-		var/mob/living/carbon/human/H = new(pod)
-		ADD_TRAIT(H, TRAIT_PACIFISM, BATTLE_ROYALE_TRAIT)
-		H.status_flags |= GODMODE
-		//Assistant gang
-		H.equipOutfit(/datum/outfit/job/assistant)
-		//Give them a spell
-		H.AddSpell(new /obj/effect/proc_holder/spell/aoe_turf/knock)
-		H.key = key
-		//Give weapons key
-		var/obj/item/implant/weapons_auth/W = new
-		W.implant(H)
-		players += H
-		to_chat(M, "<span class='notice'>You have been given knock and pacafism for 30 seconds.</span>")
-	new /obj/effect/pod_landingzone(spawn_turf, pod)
-	SEND_SOUND(world, sound('sound/misc/airraid.ogg'))
+	if(!random_spawn)
+		var/turf/spawn_turf = get_safe_random_station_turf()
+		var/obj/structure/closet/supplypod/centcompod/pod = new()
+		pod.setStyle()
+		for(var/mob/M in participants)
+			var/key = M.key
+			//Create a mob and transfer their mind to it.
+			CHECK_TICK
+			var/mob/living/carbon/human/H = new(pod)
+			ADD_TRAIT(H, TRAIT_PACIFISM, BATTLE_ROYALE_TRAIT)
+			H.status_flags |= GODMODE
+			//Assistant gang
+			H.equipOutfit(/datum/outfit/job/assistant)
+			//Give them a spell
+			H.AddSpell(new /obj/effect/proc_holder/spell/aoe_turf/knock)
+			H.key = key
+			//Give them apperance
+			H.real_name = H.client.prefs.real_name
+			H.gender = H.client.prefs.gender
+			H.age = H.client.prefs.age
+			H.underwear = H.client.prefs.underwear
+			H.underwear_color = H.client.prefs.underwear_color
+			H.undershirt = H.client.prefs.undershirt
+			H.socks = H.client.prefs.socks
+			H.hair_style = H.client.prefs.hair_style
+			H.hair_color = H.client.prefs.hair_color
+			H.facial_hair_style = H.client.prefs.facial_hair_style
+			H.facial_hair_color = H.client.prefs.facial_hair_color
+			H.skin_tone = H.client.prefs.skin_tone
+			H.eye_color = H.client.prefs.eye_color
+			H.regenerate_icons()
+			//Give weapons key
+			var/obj/item/implant/weapons_auth/W = new
+			W.implant(H)
+			players += H
+			to_chat(M, "<span class='notice'>You have been given knock and pacafism for 30 seconds.</span>")
+		new /obj/effect/pod_landingzone(spawn_turf, pod)
+		SEND_SOUND(world, sound('sound/misc/airraid.ogg'))
+	else
+		for(var/mob/M in participants)
+			var/turf/spawn_turf = get_safe_random_station_turf()
+			var/obj/structure/closet/supplypod/centcompod/pod = new()
+			pod.setStyle()
+			var/key = M.key
+			//Create a mob and transfer their mind to it.
+			CHECK_TICK
+			var/mob/living/carbon/human/H = new(pod)
+			ADD_TRAIT(H, TRAIT_PACIFISM, BATTLE_ROYALE_TRAIT)
+			H.status_flags |= GODMODE
+			//Give them a spell
+			H.AddSpell(new /obj/effect/proc_holder/spell/aoe_turf/knock)
+			H.key = key
+			//Give them apperance
+			H.real_name = H.client.prefs.real_name
+			H.gender = H.client.prefs.gender
+			H.age = H.client.prefs.age
+			H.underwear = H.client.prefs.underwear
+			H.underwear_color = H.client.prefs.underwear_color
+			H.undershirt = H.client.prefs.undershirt
+			H.socks = H.client.prefs.socks
+			H.backbag = H.client.prefs.backbag
+			H.jumpsuit_style = H.client.prefs.jumpsuit_style
+			H.hair_style = H.client.prefs.hair_style
+			H.hair_color = H.client.prefs.hair_color
+			H.facial_hair_style = H.client.prefs.facial_hair_style
+			H.facial_hair_color = H.client.prefs.facial_hair_color
+			H.skin_tone = H.client.prefs.skin_tone
+			H.eye_color = H.client.prefs.eye_color
+			//Assistant gang
+			H.equipOutfit(/datum/outfit/job/assistant)
+			H.update_icon()
+			//Give weapons key
+			var/obj/item/implant/weapons_auth/W = new
+			W.implant(H)
+			players += H
+			to_chat(M, "<span class='notice'>You have been given knock and pacafism for 30 seconds.</span>")
+			new /obj/effect/pod_landingzone(spawn_turf, pod)
+			SEND_SOUND(world, sound('sound/misc/airraid.ogg'))
+
 	to_chat(world, "<span class='boldannounce'>A 30 second grace period has been established. Good luck.</span>")
 	to_chat(world, "<span class='boldannounce'>WARNING: YOU WILL BE GIBBED IF YOU LEAVE THE STATION Z-LEVEL!</span>")
 	to_chat(world, "<span class='boldannounce'>[players.len] people remain...</span>")
