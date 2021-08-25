@@ -4,7 +4,7 @@
 	desc = "Why is it detached..."
 	force = 3
 	throwforce = 3
-	icon = 'icons/mob/human_parts.dmi'
+	icon = 'icons/mob/human_parts'+(OWNER.body_build.index?"_slim":"")+'.dmi'
 	icon_state = ""
 	layer = BELOW_MOB_LAYER //so it isn't hidden behind objects when on the floor
 	var/mob/living/carbon/owner = null
@@ -41,6 +41,7 @@
 	//Coloring and proper item icon update
 	var/skin_tone = ""
 	var/body_gender = ""
+	var/body_build
 	var/species_id = ""
 	var/should_draw_gender = FALSE
 	var/should_draw_greyscale = FALSE
