@@ -10,13 +10,12 @@
 	if(!mother)
 		return
 	var/list/map = mother.map
+	for(var/turf/T in map)
+		SSair.remove_from_active(T)
 	for(var/turf/open/T in map)
 		if(T.air)
-			if(T.initial_gas_mix)
-				T.air.parse_gas_string(T.initial_gas_mix)
-				T.set_temperature(T.air.return_temperature())
-			else
-				T.air.copy_from_turf(T)
+			T.air.copy_from_turf(T)
+		SSair.add_to_active(T)
 
 /datum/mapGeneratorModule/bottomLayer/massdelete
 	spawnableAtoms = list()

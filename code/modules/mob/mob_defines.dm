@@ -11,6 +11,7 @@
 	density = TRUE
 	layer = MOB_LAYER
 	animate_movement = SLIDE_STEPS
+	flags_1 = HEAR_1
 	hud_possible = list(ANTAG_HUD)
 	pressure_resistance = 8
 	mouse_drag_pointer = MOUSE_ACTIVE_POINTER
@@ -31,7 +32,7 @@
 	/// A special action? No idea why this lives here
 	var/list/datum/action/chameleon_item_actions
 
-	/// Whether a mob is alive or dead. TODO: Move this to living - Nodrak (2019, still here)
+	/// Whether a mob is alive or dead. TODO: Move this to living - Nodrak (2019, still here) - TheFakeElon (2020, still here)
 	var/stat = CONSCIOUS
 
 	/* A bunch of this stuff really needs to go under their own defines instead of being globally attached to mob.
@@ -150,8 +151,8 @@
 	/// Can this mob enter shuttles
 	var/move_on_shuttle = 1
 
-	///A weakref to the last mob/living/carbon to push/drag/grab this mob (exclusively used by slimes friend recognition)
-	var/datum/weakref/LAssailant = null
+	///The last mob/living/carbon to push/drag/grab this mob (exclusively used by slimes friend recognition)
+	var/mob/living/carbon/LAssailant = null
 
 	/**
 	  * construct spells and mime spells.
@@ -195,6 +196,8 @@
 
 	///For storing what do_after's someone has, in case we want to restrict them to only one of a certain do_after at a time
 	var/list/do_afters
+
+	var/list/mousemove_intercept_objects
 
 	///Allows a datum to intercept all click calls this mob is the source of
 	var/datum/click_intercept

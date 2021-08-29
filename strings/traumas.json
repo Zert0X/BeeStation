@@ -100,13 +100,12 @@
 		"e"
 	],
 	"servers": [
-		"saeg",
-		"sege",
-		"sayge",
-		"glond",
-		"glodne",
-		"geldno",
-		"clover"
+		"bager",
+		"sybl",
+		"mrs sybil",
+		"mr basil",
+		"mr terry",
+		"berry"
 	],
 	"create_verbs": [
 		"spawn",

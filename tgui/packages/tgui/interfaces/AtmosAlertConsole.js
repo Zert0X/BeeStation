@@ -8,6 +8,7 @@ export const AtmosAlertConsole = (props, context) => {
   const minorAlerts = data.minor || [];
   return (
     <Window
+      resizable
       width={350}
       height={300}>
       <Window.Content scrollable>

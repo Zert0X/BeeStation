@@ -15,8 +15,7 @@
 								"Research Machinery",
 								"Misc. Machinery",
 								"Computer Parts",
-								"Shuttle Machinery",
-								"Circuitry"
+								"Shuttle Machinery"
 								)
 	production_animation = "circuit_imprinter_ani"
 	allowed_buildtypes = IMPRINTER

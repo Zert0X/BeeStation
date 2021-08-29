@@ -368,10 +368,13 @@
 	throwforce = 0
 	throw_speed = 3
 	throw_range = 5
-	twohand_force = 0
 	attack_verb = list("attacked", "struck", "hit")
 	block_upgrade_walk = 1
 	block_power = -100
+
+/obj/item/dualsaber/toy/ComponentInitialize()
+	. = ..()
+	AddComponent(/datum/component/two_handed, force_wielded = 0, force_unwielded = 0, wieldsound='sound/weapons/saberon.ogg', unwieldsound='sound/weapons/saberoff.ogg')
 
 /obj/item/dualsaber/toy/hit_reaction(mob/living/carbon/human/owner, atom/movable/hitby, attack_text = "the attack", final_block_chance = 0, damage = 0, attack_type = MELEE_ATTACK)
 	return 0
@@ -831,7 +834,7 @@
 /obj/item/toy/cards/cardhand/Topic(href, href_list)
 	if(..())
 		return
-	if(usr.stat || !ishuman(usr))
+	if(!usr.is_conscious()|| !ishuman(usr))
 		return
 	var/mob/living/carbon/human/cardUser = usr
 	if(!(cardUser.mobility_flags & MOBILITY_USE))
@@ -1059,7 +1062,7 @@
 	if(!..())
 		playsound(src, 'sound/effects/meteorimpact.ogg', 40, 1)
 		for(var/mob/M in urange(10, src))
-			if(!M.stat && !isAI(M))
+			if(M.is_conscious() && !isAI(M))
 				shake_camera(M, 3, 1)
 		qdel(src)
 
@@ -1080,7 +1083,7 @@
 		user.visible_message("<span class='warning'>[user] presses the big red button.</span>", "<span class='notice'>You press the button, it plays a loud noise!</span>", "<span class='italics'>The button clicks loudly.</span>")
 		playsound(src, 'sound/effects/explosionfar.ogg', 50, 0)
 		for(var/mob/M in urange(10, src)) // Checks range
-			if(!M.stat && !isAI(M)) // Checks to make sure whoever's getting shaken is alive/not the AI
+			if(M.is_conscious() && !isAI(M)) // Checks to make sure whoever's getting shaken is alive/not the AI
 				sleep(8) // Short delay to match up with the explosion sound
 				shake_camera(M, 2, 1) // Shakes player camera 2 squares for 1 second.
 

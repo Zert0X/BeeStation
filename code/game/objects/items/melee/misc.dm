@@ -316,7 +316,7 @@
 			if(!iscarbon(user))
 				target.LAssailant = null
 			else
-				target.LAssailant = WEAKREF(user)
+				target.LAssailant = user
 			cooldown_check = world.time + cooldown
 		else
 			var/wait_desc = get_wait_description()

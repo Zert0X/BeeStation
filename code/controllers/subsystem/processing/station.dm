@@ -19,8 +19,7 @@ PROCESSING_SUBSYSTEM_DEF(station)
 
 	//If doing unit tests we don't do none of that trait shit ya know?
 	#ifndef UNIT_TESTS
-	if(CONFIG_GET(flag/station_traits))
-		SetupTraits()
+	SetupTraits()
 	#endif
 
 	announcer = new announcer() //Initialize the station's announcer datum

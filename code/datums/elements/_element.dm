@@ -21,10 +21,8 @@
 		RegisterSignal(target, COMSIG_PARENT_QDELETING, .proc/Detach, override = TRUE)
 
 /datum/element/proc/Detach(datum/source, force)
-	SIGNAL_HANDLER
-
 	SEND_SIGNAL(source, COMSIG_ELEMENT_DETACH, src)
-	SHOULD_CALL_PARENT(TRUE)
+	SHOULD_CALL_PARENT(1)
 	UnregisterSignal(source, COMSIG_PARENT_QDELETING)
 
 /datum/element/Destroy(force)

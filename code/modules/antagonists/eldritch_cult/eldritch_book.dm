@@ -11,9 +11,6 @@
 	///Is it in use?
 	var/in_use = FALSE
 
-/obj/item/forbidden_book/empty
-	charge = 0
-
 /obj/item/forbidden_book/Destroy()
 	last_user = null
 	. = ..()

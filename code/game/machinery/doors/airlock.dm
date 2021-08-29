@@ -291,17 +291,10 @@
 /obj/machinery/door/airlock/proc/bolt()
 	if(locked || protected_door)
 		return
-	set_bolt(TRUE)
-	playsound(src, boltDown, 30, 0, 3)
+	locked = TRUE
+	playsound(src,boltDown,30,0,3)
 	audible_message("<span class='italics'>You hear a click from the bottom of the door.</span>", null,  1)
 	update_icon()
-
-/obj/machinery/door/airlock/proc/set_bolt(should_bolt)
-	if(locked == should_bolt)
-		return
-	SEND_SIGNAL(src, COMSIG_AIRLOCK_SET_BOLT, should_bolt)
-	. = locked
-	locked = should_bolt
 
 /obj/machinery/door/airlock/unlock()
 	unbolt()
@@ -309,7 +302,7 @@
 /obj/machinery/door/airlock/proc/unbolt()
 	if(!locked)
 		return
-	set_bolt(FALSE)
+	locked = FALSE
 	playsound(src,boltUp,30,0,3)
 	audible_message("<span class='italics'>You hear a click from the bottom of the door.</span>", null,  1)
 	update_icon()
@@ -416,8 +409,6 @@
 				if(G.siemens_coefficient)//not insulated
 					new /datum/hallucination/shock(H)
 					return
-	if(SEND_SIGNAL(src, COMSIG_AIRLOCK_TOUCHED, user) & COMPONENT_PREVENT_OPEN)
-		return
 	if (cyclelinkedairlock)
 		if (!shuttledocked && !emergency && !cyclelinkedairlock.shuttledocked && !cyclelinkedairlock.emergency && allowed(user))
 			if(cyclelinkedairlock.operating)
@@ -829,9 +820,7 @@
 	return attack_hand(user)
 
 /obj/machinery/door/airlock/attack_hand(mob/user)
-	if(SEND_SIGNAL(src, COMSIG_AIRLOCK_TOUCHED, user) & COMPONENT_PREVENT_OPEN)
-		. = TRUE
-	else if(locked && allowed(user) && aac)
+	if(locked && allowed(user) && aac)
 		aac.request_from_door(src)
 		. = TRUE
 	else
@@ -1203,7 +1192,6 @@
 
 	if(!density)
 		return TRUE
-	SEND_SIGNAL(src, COMSIG_AIRLOCK_OPEN, forced)
 	operating = TRUE
 	update_icon(AIRLOCK_OPENING, 1)
 	sleep(1)
@@ -1249,7 +1237,6 @@
 	if(killthis)
 		SSexplosions.med_mov_atom += killthis
 
-	SEND_SIGNAL(src, COMSIG_AIRLOCK_CLOSE, forced)
 	operating = TRUE
 	update_icon(AIRLOCK_CLOSING, 1)
 	layer = CLOSED_DOOR_LAYER

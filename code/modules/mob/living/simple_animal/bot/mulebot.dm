@@ -743,12 +743,6 @@
 	else
 		return null
 
-/mob/living/simple_animal/bot/mulebot/remove_air_ratio(ratio)
-	if(loc)
-		return loc.remove_air_ratio(ratio)
-	else
-		return null
-
 /mob/living/simple_animal/bot/mulebot/resist()
 	..()
 	if(load)

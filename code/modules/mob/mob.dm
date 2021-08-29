@@ -16,11 +16,7 @@
   *
   * qdels any client colours in place on this mob
   *
-  * Clears any refs to the mob inside its current location
-  *
   * Ghostizes the client attached to this mob
-  *
-  * If our mind still exists, clear its current var to prevent harddels
   *
   * Parent call
   */
@@ -28,7 +24,6 @@
 	remove_from_mob_list()
 	remove_from_dead_mob_list()
 	remove_from_alive_mob_list()
-	remove_from_mob_suicide_list()
 	focus = null
 	for (var/alert in alerts)
 		clear_alert(alert, TRUE)
@@ -41,8 +36,6 @@
 		qdel(cc)
 	client_colours = null
 	ghostize()
-	if(mind?.current == src) //Let's just be safe yeah? This will occasionally be cleared, but not always. Can't do it with ghostize without changing behavior
-		mind.set_current(null)
 	QDEL_LIST(mob_spell_list)
 	for(var/datum/action/A as() in actions)
 		if(istype(A.target, /obj/effect/proc_holder))
@@ -91,7 +84,6 @@
 	update_movespeed(TRUE)
 	//Give verbs to stat
 	add_verb(verbs, TRUE)
-	become_hearing_sensitive()
 
 /**
   * Generate the tag for this mob
@@ -135,7 +127,7 @@
 	t +=	"<span class='danger'>Temperature: [environment.return_temperature()] \n</span>"
 	for(var/id in environment.get_gases())
 		if(environment.get_moles(id))
-			t+="<span class='notice'>[GLOB.gas_data.names[id]]: [environment.get_moles(id)] \n</span>"
+			t+="<span class='notice'>[GLOB.meta_gas_info[id][META_GAS_NAME]]: [environment.get_moles(id)] \n</span>"
 
 	to_chat(usr, t)
 
@@ -569,16 +561,6 @@
 
 	return TRUE
 
-/**
-  * Called by using Activate Held Object with an empty hand/limb
-  *
-  * Does nothing by default. The intended use is to allow limbs to call their
-  * own attack_self procs. It is up to the individual mob to override this
-  * parent and actually use it.
-  */
-/mob/proc/limb_attack_self()
-	return
-
 ///Can this mob resist (default FALSE)
 /mob/proc/can_resist()
 	return FALSE		//overridden in living.dm
@@ -631,10 +613,6 @@
 	if(I)
 		I.attack_self(src)
 		update_inv_hands()
-		return
-
-	limb_attack_self()
-
 
 /**
   * Get the notes of this mob
@@ -1330,21 +1308,3 @@
 	SEND_SIGNAL(src, COMSIG_MOB_STATCHANGE, new_stat)
 	. = stat
 	stat = new_stat
-
-/mob/proc/set_active_storage(new_active_storage)
-	if(active_storage)
-		UnregisterSignal(active_storage, COMSIG_PARENT_QDELETING)
-	active_storage = new_active_storage
-	if(active_storage)
-		RegisterSignal(active_storage, COMSIG_PARENT_QDELETING, .proc/active_storage_deleted)
-
-/mob/proc/active_storage_deleted(datum/source)
-	SIGNAL_HANDLER
-	set_active_storage(null)
-
-///Clears the client in contents list of our current "eye". Prevents hard deletes
-/mob/proc/clear_client_in_contents()
-	if(client?.movingmob) //In the case the client was transferred to another mob and not deleted.
-		client.movingmob.client_mobs_in_contents -= src
-		UNSETEMPTY(client.movingmob.client_mobs_in_contents)
-		client.movingmob = null

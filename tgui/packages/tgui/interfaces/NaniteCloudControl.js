@@ -1,3 +1,4 @@
+import { Fragment } from 'inferno';
 import { useBackend } from '../backend';
 import { Box, Button, Collapsible, Grid, LabeledList, NoticeBox, NumberInput, Section } from '../components';
 import { Window } from '../layouts';
@@ -76,14 +77,14 @@ export const NaniteInfoBox = (props, context) => {
               {use_rate}
             </LabeledList.Item>
             {!!can_trigger && (
-              <>
+              <Fragment>
                 <LabeledList.Item label="Trigger Cost">
                   {trigger_cost}
                 </LabeledList.Item>
                 <LabeledList.Item label="Trigger Cooldown">
                   {trigger_cooldown}
                 </LabeledList.Item>
-              </>
+              </Fragment>
             )}
           </LabeledList>
         </Grid.Column>
@@ -125,14 +126,14 @@ export const NaniteInfoBox = (props, context) => {
                 {timer_shutdown} s
               </LabeledList.Item>
               {!!can_trigger && (
-                <>
+                <Fragment>
                   <LabeledList.Item label="Trigger">
                     {timer_trigger} s
                   </LabeledList.Item>
                   <LabeledList.Item label="Trigger Delay">
                     {timer_trigger_delay} s
                   </LabeledList.Item>
-                </>
+                </Fragment>
               )}
             </LabeledList>
           </Section>
@@ -144,12 +145,10 @@ export const NaniteInfoBox = (props, context) => {
         <LabeledList>
           {extra_settings.map(setting => {
             const naniteTypesDisplayMap = {
-              number: <>{setting.value}{setting.unit}</>,
+              number: <Fragment>{setting.value}{setting.unit}</Fragment>,
               text: setting.value,
               type: setting.value,
-              boolean: (setting.value
-                ? setting.true_text
-                : setting.false_text),
+              boolean: (setting.value ? setting.true_text : setting.false_text),
             };
             return (
               <LabeledList.Item key={setting.name} label={setting.name}>
@@ -246,7 +245,7 @@ export const NaniteCloudBackupDetails = (props, context) => {
                   )}>
                   {program.has_rules ? (
                     rules.map(rule => (
-                      <Box key={rule.display}>
+                      <Fragment key={rule.display}>
                         <Button
                           icon="minus-circle"
                           color="bad"
@@ -255,7 +254,7 @@ export const NaniteCloudBackupDetails = (props, context) => {
                             rule_id: rule.id,
                           })} />
                         {rule.display}
-                      </Box>
+                      </Fragment>
                     ))
                   ) : (
                     <Box color="bad">
@@ -282,6 +281,7 @@ export const NaniteCloudControl = (props, context) => {
 
   return (
     <Window
+      resizable
       width={375}
       height={700}>
       <Window.Content scrollable>
@@ -307,7 +307,7 @@ export const NaniteCloudControl = (props, context) => {
                   view: 0,
                 })} />
             ) : (
-              <>
+              <Fragment>
                 {"New Backup: "}
                 <NumberInput
                   value={new_backup_id}
@@ -321,7 +321,7 @@ export const NaniteCloudControl = (props, context) => {
                 <Button
                   icon="plus"
                   onClick={() => act('create_backup')} />
-              </>
+              </Fragment>
             )
           )}>
           {!data.current_view ? (

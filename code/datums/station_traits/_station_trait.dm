@@ -18,8 +18,6 @@
 	var/blacklist
 	///Extra flags for station traits such as it being abstract
 	var/trait_flags
-	///Should we announce anything roundstart? If so, those are our options
-	var/list/possible_announcements
 
 
 /datum/station_trait/New()
@@ -32,8 +30,7 @@
 
 ///Proc ran when round starts. Use this for roundstart effects.
 /datum/station_trait/proc/on_round_start()
-	if(length(possible_announcements))
-		priority_announce(pick(possible_announcements), null, null, has_important_message = TRUE)
+	return
 
 ///type of info the centcom report has on this trait, if any.
 /datum/station_trait/proc/get_report()

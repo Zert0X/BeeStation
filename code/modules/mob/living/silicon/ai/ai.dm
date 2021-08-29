@@ -443,11 +443,9 @@
 		trackeable += track.humans + track.others
 		var/list/target = list()
 		for(var/I in trackeable)
-			var/datum/weakref/to_resolve = trackeable[I]
-			var/mob/to_track = to_resolve.resolve()
-			if(!to_track || to_track.name != string)
-				continue
-			target += to_track
+			var/mob/M = trackeable[I]
+			if(M.name == string)
+				target += M
 		if(name == string)
 			target += src
 		if(target.len)

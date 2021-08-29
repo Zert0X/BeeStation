@@ -218,7 +218,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 			else
 				++num_disconnected
 	if(num_disconnected)
-		tab_data["Disconnected"] = list(
+		tab_data["Diconnected"] = list(
 			text = "[num_disconnected]",
 			type = STAT_BUTTON,
 			action = "browsetickets",

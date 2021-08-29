@@ -6,8 +6,6 @@
 	snail = parent
 
 /datum/component/snailcrawl/proc/lubricate()
-	SIGNAL_HANDLER
-
 	if(snail.resting && !snail.buckled) //s l i d e
 		var/turf/open/OT = get_turf(snail)
 		if(isopenturf(OT))

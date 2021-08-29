@@ -93,10 +93,30 @@
 	if(transfer_ratio <= 0)
 		return
 
-	if(filter_type && air2.return_pressure() <= 9000)
-		air1.scrub_into(air2, transfer_ratio, list(filter_type))
-	if(air3.return_pressure() <= 9000)
-		air1.transfer_ratio_to(air3, transfer_ratio)
+	var/datum/gas_mixture/removed = air1.remove_ratio(transfer_ratio)
+
+	if(!removed)
+		return
+
+	var/filtering = TRUE
+	if(!ispath(filter_type))
+		if(filter_type)
+			filter_type = gas_id2path(filter_type) //support for mappers so they don't need to type out paths
+		else
+			filtering = FALSE
+
+	if(filtering && removed.get_moles(filter_type))
+		var/datum/gas_mixture/filtered_out = new
+
+		filtered_out.set_temperature(removed.return_temperature())
+		filtered_out.set_moles(filter_type, removed.get_moles(filter_type))
+
+		removed.set_moles(filter_type, 0)
+
+		var/datum/gas_mixture/target = (air2.return_pressure() < MAX_OUTPUT_PRESSURE ? air2 : air1) //if there's no room for the filtered gas; just leave it in air1
+		target.merge(filtered_out)
+
+	air3.merge(removed)
 
 	update_parents()
 
@@ -121,9 +141,10 @@
 	data["max_rate"] = round(MAX_TRANSFER_RATE)
 
 	data["filter_types"] = list()
-	data["filter_types"] += list(list("name" = "Nothing", "id" = "", "selected" = !filter_type))
-	for(var/id in GLOB.gas_data.ids)
-		data["filter_types"] += list(list("name" = GLOB.gas_data.names[id], "id" = id, "selected" = (id == filter_type)))
+	data["filter_types"] += list(list("name" = "Nothing", "path" = "", "selected" = !filter_type))
+	for(var/path in GLOB.meta_gas_info)
+		var/list/gas = GLOB.meta_gas_info[path]
+		data["filter_types"] += list(list("name" = gas[META_GAS_NAME], "id" = gas[META_GAS_ID], "selected" = (path == gas_id2path(filter_type))))
 
 	return data
 
@@ -153,10 +174,10 @@
 		if("filter")
 			filter_type = null
 			var/filter_name = "nothing"
-			var/gas = params["mode"]
-			if(gas in GLOB.gas_data.names)
+			var/gas = gas_id2path(params["mode"])
+			if(gas in GLOB.meta_gas_info)
 				filter_type = gas
-				filter_name	= GLOB.gas_data.names[gas]
+				filter_name	= GLOB.meta_gas_info[gas][META_GAS_NAME]
 			investigate_log("was set to filter [filter_name] by [key_name(usr)]", INVESTIGATE_ATMOS)
 			. = TRUE
 	ui_update()

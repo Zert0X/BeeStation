@@ -30,6 +30,7 @@ export const NtosMain = (props, context) => {
   } = data;
   return (
     <NtosWindow
+      resizable
       width={400}
       height={500}>
       <NtosWindow.Content scrollable>

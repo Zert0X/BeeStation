@@ -1,4 +1,5 @@
 import { round, toFixed } from 'common/math';
+import { Fragment } from 'inferno';
 import { useBackend } from '../backend';
 import { AnimatedNumber, Box, Button, LabeledList, NumberInput, Section } from '../components';
 import { Window } from '../layouts';
@@ -17,6 +18,7 @@ export const ChemHeater = (props, context) => {
   } = data;
   return (
     <Window
+      resizable
       width={275}
       height={320}>
       <Window.Content scrollable>
@@ -59,7 +61,7 @@ export const ChemHeater = (props, context) => {
         <Section
           title="Beaker"
           buttons={!!isBeakerLoaded && (
-            <>
+            <Fragment>
               <Box inline color="label" mr={2}>
                 {beakerCurrentVolume} / {beakerMaxVolume} units
               </Box>
@@ -67,7 +69,7 @@ export const ChemHeater = (props, context) => {
                 icon="eject"
                 content="Eject"
                 onClick={() => act('eject')} />
-            </>
+            </Fragment>
           )}>
           <BeakerContents
             beakerLoaded={isBeakerLoaded}

@@ -247,8 +247,6 @@
 	insanity_effect = newval
 
 /datum/component/mood/proc/add_event(datum/source, category, type, param) //Category will override any events in the same category, should be unique unless the event is based on the same thing like hunger.
-	SIGNAL_HANDLER
-
 	var/datum/mood_event/the_event
 	if(!istext(category))
 		category = REF(category)
@@ -270,8 +268,6 @@
 		addtimer(CALLBACK(src, .proc/clear_event, null, category), the_event.timeout, TIMER_UNIQUE|TIMER_OVERRIDE)
 
 /datum/component/mood/proc/clear_event(datum/source, category)
-	SIGNAL_HANDLER
-
 	if(!istext(category))
 		category = REF(category)
 	var/datum/mood_event/event = mood_events[category]
@@ -298,8 +294,6 @@
 
 
 /datum/component/mood/proc/modify_hud(datum/source)
-	SIGNAL_HANDLER
-
 	var/mob/living/owner = parent
 	var/datum/hud/hud = owner.hud_used
 	screen_obj = new
@@ -310,8 +304,6 @@
 	RegisterSignal(screen_obj, COMSIG_CLICK, .proc/hud_click)
 
 /datum/component/mood/proc/unmodify_hud(datum/source)
-	SIGNAL_HANDLER
-
 	if(!screen_obj)
 		return
 	var/mob/living/owner = parent
@@ -323,8 +315,6 @@
 	QDEL_NULL(screen_obj_sanity)
 
 /datum/component/mood/proc/hud_click(datum/source, location, control, params, mob/user)
-	SIGNAL_HANDLER
-
 	print_mood(user)
 
 /datum/component/mood/proc/HandleNutrition(mob/living/L)
@@ -377,8 +367,6 @@
 			add_event(null, "hygiene", /datum/mood_event/neat)
 
 /datum/component/mood/proc/check_area_mood(datum/source, var/area/A)
-	SIGNAL_HANDLER
-
 	if(A.mood_bonus)
 		if(get_event("area"))	//walking between areas that give mood bonus should first clear the bonus from the previous one
 			clear_event(null, "area")
@@ -391,6 +379,4 @@
 
 ///Causes direct drain of someone's sanity, call it with a numerical value corresponding how badly you want to hurt their sanity
 /datum/component/mood/proc/direct_sanity_drain(datum/source, amount)
-	SIGNAL_HANDLER
-
 	setSanity(sanity + amount)

@@ -1,3 +1,4 @@
+import { Fragment } from 'inferno';
 import { useBackend } from '../backend';
 import { Box, Button, LabeledList, NoticeBox, Section } from '../components';
 import { NtosWindow } from '../layouts';
@@ -5,6 +6,7 @@ import { NtosWindow } from '../layouts';
 export const NtosCyborgRemoteMonitor = (props, context) => {
   return (
     <NtosWindow
+      resizable
       width={600}
       height={800}>
       <NtosWindow.Content scrollable>
@@ -30,7 +32,7 @@ export const NtosCyborgRemoteMonitorContent = (props, context) => {
   }
 
   return (
-    <>
+    <Fragment>
       {!card && (
         <NoticeBox>
           Certain features require an ID card login.
@@ -88,6 +90,6 @@ export const NtosCyborgRemoteMonitorContent = (props, context) => {
           </Section>
         );
       })}
-    </>
+    </Fragment>
   );
 };

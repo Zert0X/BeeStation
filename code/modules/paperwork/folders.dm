@@ -105,7 +105,7 @@
 	if(.)
 		return
 
-	if(usr.incapacitated())
+	if(!usr.is_conscious() || usr.incapacitated())
 		return
 
 	switch(action)

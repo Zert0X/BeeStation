@@ -261,9 +261,6 @@ Difficulty: Very Hard
 			SSexplosions.medturf += target
 
 
-//There can only ever be one blackbox, and we want to know if there already is one when we spawn
-GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
-
 //Black Box
 
 /obj/machinery/smartfridge/black_box
@@ -293,9 +290,11 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 
 /obj/machinery/smartfridge/black_box/Initialize()
 	. = ..()
-	if(GLOB.blackbox != src)
-		return INITIALIZE_HINT_QDEL_FORCE
-	GLOB.blackbox = src
+	var/static/obj/machinery/smartfridge/black_box/current
+	if(current && current != src)
+		qdel(src, force=TRUE)
+		return
+	current = src
 	ReadMemory()
 
 /obj/machinery/smartfridge/black_box/process()
@@ -340,8 +339,6 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 
 /obj/machinery/smartfridge/black_box/Destroy(force = FALSE)
 	if(force)
-		if(GLOB.blackbox == src)
-			GLOB.blackbox = null
 		for(var/thing in src)
 			qdel(thing)
 		return ..()
@@ -391,6 +388,7 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	use_power = NO_POWER_USE
 	anchored = FALSE
 	density = TRUE
+	flags_1 = HEAR_1
 	var/activation_method
 	var/list/possible_methods = list(ACTIVATE_TOUCH, ACTIVATE_SPEECH, ACTIVATE_HEAT, ACTIVATE_BULLET, ACTIVATE_ENERGY, ACTIVATE_BOMB, ACTIVATE_MOB_BUMP, ACTIVATE_WEAPON, ACTIVATE_MAGIC)
 
@@ -404,7 +402,6 @@ GLOBAL_DATUM(blackbox, /obj/machinery/smartfridge/black_box)
 	. = ..()
 	if(!activation_method)
 		activation_method = pick(possible_methods)
-	become_hearing_sensitive(trait_source = ROUNDSTART_TRAIT)
 
 /obj/machinery/anomalous_crystal/examine(mob/user)
 	. = ..()

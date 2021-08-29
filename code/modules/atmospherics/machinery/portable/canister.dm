@@ -23,7 +23,7 @@
 	integrity_failure = 100
 	pressure_resistance = 7 * ONE_ATMOSPHERE
 	var/temperature_resistance = 1000 + T0C
-	var/starter_temp = T20C
+	var/starter_temp
 	// Prototype vars
 	var/prototype = FALSE
 	var/valve_timer = null
@@ -65,37 +65,37 @@
 	name = "n2 canister"
 	desc = "Nitrogen gas. Reportedly useful for something."
 	icon_state = "red"
-	gas_type = GAS_N2
+	gas_type = /datum/gas/nitrogen
 
 /obj/machinery/portable_atmospherics/canister/oxygen
 	name = "o2 canister"
 	desc = "Oxygen. Necessary for human life."
 	icon_state = "blue"
-	gas_type = GAS_O2
+	gas_type = /datum/gas/oxygen
 
 /obj/machinery/portable_atmospherics/canister/carbon_dioxide
 	name = "co2 canister"
 	desc = "Carbon dioxide. What the fuck is carbon dioxide?"
 	icon_state = "black"
-	gas_type = GAS_CO2
+	gas_type = /datum/gas/carbon_dioxide
 
 /obj/machinery/portable_atmospherics/canister/toxins
 	name = "plasma canister"
 	desc = "Plasma gas. The reason YOU are here. Highly toxic."
 	icon_state = "orange"
-	gas_type = GAS_PLASMA
+	gas_type = /datum/gas/plasma
 
 /obj/machinery/portable_atmospherics/canister/bz
 	name = "\improper BZ canister"
 	desc = "BZ, a powerful hallucinogenic nerve agent."
 	icon_state = "purple"
-	gas_type = GAS_BZ
+	gas_type = /datum/gas/bz
 
 /obj/machinery/portable_atmospherics/canister/nitrous_oxide
 	name = "n2o canister"
 	desc = "Nitrous oxide gas. Known to cause drowsiness."
 	icon_state = "redws"
-	gas_type = GAS_NITROUS
+	gas_type = /datum/gas/nitrous_oxide
 
 /obj/machinery/portable_atmospherics/canister/air
 	name = "air canister"
@@ -106,44 +106,44 @@
 	name = "tritium canister"
 	desc = "Tritium. Inhalation might cause irradiation."
 	icon_state = "green"
-	gas_type = GAS_TRITIUM
+	gas_type = /datum/gas/tritium
 
 /obj/machinery/portable_atmospherics/canister/nob
 	name = "hyper-noblium canister"
 	desc = "Hyper-Noblium. More noble than all other gases."
 	icon_state = "freon"
-	gas_type = GAS_HYPERNOB
+	gas_type = /datum/gas/hypernoblium
 
 /obj/machinery/portable_atmospherics/canister/nitryl
 	name = "nitryl canister"
 	desc = "Nitryl gas. Feels great 'til the acid eats your lungs."
 	icon_state = "brown"
-	gas_type = GAS_NITRYL
+	gas_type = /datum/gas/nitryl
 
 /obj/machinery/portable_atmospherics/canister/stimulum
 	name = "stimulum canister"
 	desc = "Stimulum. High energy gas, high energy people."
 	icon_state = "darkpurple"
-	gas_type = GAS_STIMULUM
+	gas_type = /datum/gas/stimulum
 
 /obj/machinery/portable_atmospherics/canister/pluoxium
 	name = "pluoxium canister"
 	desc = "Pluoxium. Like oxygen, but more bang for your buck."
 	icon_state = "darkblue"
-	gas_type = GAS_PLUOXIUM
+	gas_type = /datum/gas/pluoxium
 
 /obj/machinery/portable_atmospherics/canister/water_vapor
 	name = "water vapor canister"
 	desc = "Water Vapor. We get it, you vape."
 	icon_state = "water_vapor"
-	gas_type = GAS_H2O
+	gas_type = /datum/gas/water_vapor
 	filled = 1
 
 /obj/machinery/portable_atmospherics/canister/miasma
 	name = "miasma canister"
 	desc = "Miasma. Makes you wish your nose was blocked."
 	icon_state = "miasma"
-	gas_type = GAS_MIASMA
+	gas_type = /datum/gas/miasma
 	filled = 1
 
 
@@ -180,7 +180,7 @@
 	name = "prototype canister"
 	desc = "A prototype canister for a prototype bike, what could go wrong?"
 	icon_state = "proto"
-	gas_type = GAS_O2
+	gas_type = /datum/gas/oxygen
 	filled = 1
 	release_pressure = ONE_ATMOSPHERE*2
 
@@ -206,14 +206,13 @@
 	if(gas_type)
 		if(starter_temp)
 			air_contents.set_temperature(starter_temp)
-		if(!air_contents.return_volume())
-			CRASH("Auxtools is failing somehow! Gas with pointer [air_contents._extools_pointer_gasmixture] is not valid.")
 		air_contents.set_moles(gas_type, (maximum_pressure * filled) * air_contents.return_volume() / (R_IDEAL_GAS_EQUATION * air_contents.return_temperature()))
 
 /obj/machinery/portable_atmospherics/canister/air/create_gas()
-	air_contents.set_temperature(starter_temp)
-	air_contents.set_moles(GAS_O2, (O2STANDARD * maximum_pressure * filled) * air_contents.return_volume() / (R_IDEAL_GAS_EQUATION * air_contents.return_temperature()))
-	air_contents.set_moles(GAS_N2, (N2STANDARD * maximum_pressure * filled) * air_contents.return_volume() / (R_IDEAL_GAS_EQUATION * air_contents.return_temperature()))
+	if(starter_temp)
+		air_contents.set_temperature(starter_temp)
+	air_contents.set_moles(/datum/gas/oxygen, (O2STANDARD * maximum_pressure * filled) * air_contents.return_volume() / (R_IDEAL_GAS_EQUATION * air_contents.return_temperature()))
+	air_contents.set_moles(/datum/gas/nitrogen, (N2STANDARD * maximum_pressure * filled) * air_contents.return_volume() / (R_IDEAL_GAS_EQUATION * air_contents.return_temperature()))
 
 #define CANISTER_UPDATE_HOLDING		(1<<0)
 #define CANISTER_UPDATE_CONNECTED	(1<<1)
@@ -308,8 +307,9 @@
 
 /obj/machinery/portable_atmospherics/canister/proc/canister_break()
 	disconnect()
+	var/datum/gas_mixture/expelled_gas = air_contents.remove(air_contents.total_moles())
 	var/turf/T = get_turf(src)
-	T.assume_air(air_contents)
+	T.assume_air(expelled_gas)
 	air_update_turf()
 
 	stat |= BROKEN
@@ -435,10 +435,10 @@
 				if(!holding)
 					var/list/danger = list()
 					for(var/id in air_contents.get_gases())
-						if(!(GLOB.gas_data.flags[id] & GAS_FLAG_DANGEROUS))
+						if(!GLOB.meta_gas_info[id][META_GAS_DANGER])
 							continue
-						if(air_contents.get_moles(id) > (GLOB.gas_data.visibility[id] || MOLES_GAS_VISIBLE)) //if moles_visible is undefined, default to default visibility
-							danger[GLOB.gas_data.names[id]] = air_contents.get_moles(id) //ex. "plasma" = 20
+						if(air_contents.get_moles(id) > (GLOB.meta_gas_info[id][META_GAS_MOLES_VISIBLE] || MOLES_GAS_VISIBLE)) //if moles_visible is undefined, default to default visibility
+							danger[GLOB.meta_gas_info[id][META_GAS_NAME]] = air_contents.get_moles(id) //ex. "plasma" = 20
 
 					if(danger.len)
 						message_admins("[ADMIN_LOOKUPFLW(usr)] opened a canister that contains the following at [ADMIN_VERBOSEJMP(src)]:")
