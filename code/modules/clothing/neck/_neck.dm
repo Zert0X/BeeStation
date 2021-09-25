@@ -221,7 +221,7 @@
 /obj/item/clothing/neck/neckerchief/worn_overlays(isinhands)
 	. = ..()
 	if(!isinhands)
-		var/mutable_appearance/realOverlay = mutable_appearance('icons/mob/mask.dmi', icon_state)
+		var/mutable_appearance/realOverlay = mutable_appearance('icons/inv_slots/masks/mob.dmi', icon_state)
 		realOverlay.pixel_y = -3
 		. += realOverlay
 

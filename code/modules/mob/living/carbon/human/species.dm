@@ -11,7 +11,7 @@ GLOBAL_LIST_EMPTY(roundstart_races)
 	var/sexes = 1		// whether or not the race has sexual characteristics. at the moment this is only 0 for skeletons and shadows
 
 	var/list/body_builds = list(
-		new/datum/body_build
+		new/datum/body_build,
 		new/datum/body_build/slim
 	)
 

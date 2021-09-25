@@ -4,7 +4,7 @@
 	desc = "Why is it detached..."
 	force = 3
 	throwforce = 3
-	icon = 'icons/mob/human_parts'+(OWNER.body_build.index?"_slim":"")+'.dmi'
+	icon = body_build.index ? 'icons/mob/human_parts.dmi' : 'icons/mob/human_parts_slim.dmi'
 	icon_state = ""
 	layer = BELOW_MOB_LAYER //so it isn't hidden behind objects when on the floor
 	var/mob/living/carbon/owner = null
